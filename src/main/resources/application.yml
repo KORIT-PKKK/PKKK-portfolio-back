@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/database
+    username: root
+    password: root
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 588031225464-krfbhh2d0r03ftktqhjq0ubhmgthjlpr.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+  redis:
+    host: localhost
+    port: 6379
+
+mybatis:
+  mapper-locations:
+    - /mappers/*.xml
+
+jwt:
+  secret: ezV2FMXHX7bzV8eEL9lHf0MLSCnB5M6gtjcHmokIxABqjplbHtRypoN8H2vMTxVO
