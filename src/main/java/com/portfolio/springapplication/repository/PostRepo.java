@@ -27,6 +27,10 @@ public interface PostRepo {
     @Options(statementType = StatementType.CALLABLE)
     List<PostOutline> getLocPost(int locId);
 
+    @Select("CALL get_user_post_overview(#{userId})")
+    @Options(statementType = StatementType.CALLABLE)
+    List<PostOutline> getUserPost(int userId);
+
     @Select("INSERT INTO user_loc_fav (user_id, loc_id) VALUES (#{userId}, #{locId})")
     @Options(statementType = StatementType.PREPARED)
     String addFavLoc(int userId, int locId);

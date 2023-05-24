@@ -35,7 +35,8 @@ public class UserSecurityConfig {
 
         http.authorizeHttpRequests()
                 .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/auth/refresh",
-                        "/api/post/list", "/api/post/view", "/api/user/info", "/api/user/detail?userId=**")
+                        "/api/post/list", "/api/post/location", "/api/post/view", "/api/post/user",
+                        "/api/user/info", "/api/user/detail")
                 .permitAll()
                 .anyRequest().authenticated()
             .and()

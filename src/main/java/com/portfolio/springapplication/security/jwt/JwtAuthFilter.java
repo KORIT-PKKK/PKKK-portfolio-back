@@ -19,15 +19,16 @@ public class JwtAuthFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final List<String> EXCLUDE_URLS = Arrays.asList(
-            "/api/auth/signin", "/api/auth/signup", "/api/auth/refresh",
-            "/api/post/list", "/api/post/view", "/api/user/info"
+            "/api/auth/signout",
+            "/api/post/add", "/api/post/fav/add/loc", "/api/post/fav/add/post",
+            "/api/user/detail/update", "api/user/password/change", "/api/user/subto", "/api/user/subme"
     );
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        if (!excludeFilter(httpRequest)) {
+        if (excludeFilter(httpRequest)) {
 
             String accessToken = httpRequest.getHeader("Authorization");
             accessToken = jwtTokenProvider.getToken(accessToken);

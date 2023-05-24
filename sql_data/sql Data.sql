@@ -821,6 +821,63 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_user_post_overview` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`%` PROCEDURE `get_user_post_overview`(
+    IN p_user_id INT
+)
+BEGIN
+SELECT
+  pm.post_id AS postId,
+  pm.user_id AS userId,
+  pm.loc_id AS locId,
+  ud.name,
+  ud.image_url AS imageUrl,
+  lm.loc_name AS locName,
+  lm.address,
+  lm.category,
+  COUNT(DISTINCT upc.post_id) AS picPostCnt,
+  pd.content,
+  pe.eval_score AS evalScore,
+  GROUP_CONCAT(DISTINCT pp.pic_data SEPARATOR ', ') AS picDatas,
+  pm.create_at AS createAt,
+  pm.update_at AS updateAt
+FROM post_mst pm
+LEFT JOIN user_dtl ud ON ud.user_id = pm.user_id
+LEFT JOIN user_pic upc ON upc.user_id = ud.user_id
+LEFT JOIN location_mst lm ON lm.loc_id = pm.loc_id
+LEFT JOIN post_dtl pd ON pd.post_id = pm.post_id
+LEFT JOIN post_eval pe ON pe.post_id = pm.post_id
+LEFT JOIN post_pic pp ON pp.post_id = pm.post_id
+WHERE pm.user_id = p_user_id
+GROUP BY
+  pm.post_id,
+  pm.user_id,
+  pm.loc_id,
+  ud.name,
+  ud.image_url,
+  lm.loc_name,
+  lm.address,
+  lm.category,
+  pd.content,
+  pe.eval_score,
+  pm.create_at,
+  pm.update_at
+ORDER BY pm.create_at DESC;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sign_up` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -916,4 +973,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-24 14:05:11
+-- Dump completed on 2023-05-24 15:48:20

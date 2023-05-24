@@ -36,6 +36,11 @@ public class PostCtrl {
         return ResponseEntity.ok().body(postRepo.getLocPost(locId));
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserPost(@RequestParam("userId") int userId){
+        return ResponseEntity.ok().body(postRepo.getUserPost(userId));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> addPost(@RequestBody PostAddReqDto postAddReqDto) {
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(postAddReqDto.getUsername());
