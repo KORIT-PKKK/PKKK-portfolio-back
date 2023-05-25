@@ -46,4 +46,9 @@ public interface UserRepo {
             "WHERE us.sub_user_id = #{userId}")
     @Options(statementType = StatementType.PREPARED)
     List<SubModel> getSubMe(int userId);
+
+    @Select("INSERT INTO user_sub (user_id, sub_user_id)" +
+            "VALUES (#{userId}, #{subUserId})")
+    @Options(statementType = StatementType.PREPARED)
+    String subUser(int userId, int subUserId);
 }

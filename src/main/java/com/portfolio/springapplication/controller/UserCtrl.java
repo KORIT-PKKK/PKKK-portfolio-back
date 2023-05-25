@@ -1,6 +1,7 @@
 package com.portfolio.springapplication.controller;
 
 import com.portfolio.springapplication.dto.user.PwChangeReqDto;
+import com.portfolio.springapplication.dto.user.SubReqDto;
 import com.portfolio.springapplication.dto.user.UpdateReqDto;
 import com.portfolio.springapplication.repository.UserRepo;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetail;
@@ -58,6 +59,11 @@ public class UserCtrl {
         String cryptPassword = encoder.encode(newPassword);
 
         return ResponseEntity.ok().body(userRepo.changePassword(userPrincipalDetail.user().getId(), pwChangeReqDto.getUsername(), cryptPassword));
+    }
+
+    @PostMapping("/addsub")
+    public ResponseEntity<?> addSub(@RequestBody SubReqDto subReqDto){
+        return ResponseEntity.ok().body(userRepo.subUser(subReqDto.getUserId(), subReqDto.getSubUserId()));
     }
 
     @GetMapping("/subto")
