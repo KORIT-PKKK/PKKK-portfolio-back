@@ -23,6 +23,8 @@ public interface PostRepo {
     @Options(statementType = StatementType.CALLABLE)
     int addPost(int userId, String content, int locId, int evalScore, String picDatas);
 
+
+
     @Select("CALL get_location_post_overview(#{locId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)
     List<PostOutline> getLocPost(Integer locId, Integer userId);

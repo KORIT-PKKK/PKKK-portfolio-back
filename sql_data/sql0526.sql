@@ -623,6 +623,75 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_location` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`%` PROCEDURE `get_location`(
+  IN p_loc_id INT,
+  IN p_user_id INT
+)
+BEGIN
+IF p_user_id IS NULL OR p_user_id = '' THEN
+SELECT
+  lm.loc_id AS locId,
+  lm.loc_name AS locName,
+  lm.address,
+  cm.category_name AS category,
+  lm.latitude AS lat,
+  lm.longitude AS lng,
+  AVG(pe.eval_score) AS evalScore
+FROM location_mst lm
+LEFT JOIN category_mst cm ON cm.category_id = lm.category
+LEFT JOIN location_eval le ON le.loc_id = lm.loc_id
+LEFT JOIN post_eval pe ON pe.post_eval_id = le.post_eval_id
+WHERE lm.loc_id = p_loc_id
+GROUP BY
+  lm.loc_id,
+  lm.loc_name,
+  lm.address,
+  cm.category_name,
+  lm.latitude,
+  lm.longitude;
+  
+ELSE
+
+SELECT
+  lm.loc_id AS locId,
+  lm.loc_name AS locName,
+  lm.address,
+  cm.category_name AS category,
+  lm.latitude AS lat,
+  lm.longitude AS lng,
+  ulf.user_loc_fav_id AS userLocFavId,
+  AVG(pe.eval_score) AS evalScore
+FROM location_mst lm
+LEFT JOIN category_mst cm ON cm.category_id = lm.category
+LEFT JOIN location_eval le ON le.loc_id = lm.loc_id
+LEFT JOIN post_eval pe ON pe.post_eval_id = le.post_eval_id
+LEFT JOIN user_loc_fav ulf ON (ulf.loc_id = lm.loc_id AND ulf.user_id = p_user_id)
+WHERE lm.loc_id = p_loc_id
+GROUP BY
+  lm.loc_id,
+  lm.loc_name,
+  lm.address,
+  cm.category_name,
+  lm.latitude,
+  lm.longitude,
+  ulf.user_loc_fav_id;
+END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `get_location_datas` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1180,6 +1249,66 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `post_update` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`%` PROCEDURE `post_update`(
+IN p_user_id INT,
+IN p_post_eval_score DOUBLE,
+IN p_post_pic_datas TEXT,
+IN p_post_content TEXT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+        ROLLBACK;
+        SELECT CONCAT('Error occurred. Error Code: ', @errno, ', SQL State: ', @sqlstate, ', Message: ', @text) AS error_message;
+    END;
+
+START TRANSACTION;
+
+IF p_post_eval_score IS NOT NULL AND p_post_eval_score != '' THEN
+UPDATE post_mst pm
+LEFT JOIN post_eval pe ON pe.post_id = pm.post_id
+SET pe.eval_score = p_post_eval_score 
+WHERE pm.user_id = p_user_id AND (pe.eval_score != p_post_eval_score OR pe.eval_score IS NULL);
+END IF;
+
+IF p_post_pic_datas IS NOT NULL AND p_post_pic_datas != '' THEN
+    SET @pic_datas = p_post_pic_datas;
+    WHILE LENGTH(@pic_datas) > 0 DO
+        SET @pic_data = SUBSTRING_INDEX(@pic_datas, ',', 1);
+        UPDATE post_mst pm
+        LEFT JOIN post_pic pp ON pp.post_id = pm.post_id
+        SET pp.pic_data = @pic_data
+        WHERE pm.user_id = p_user_id AND (pp.pic_data != @pic_data OR pp.pic_data IS NULL);
+        SET @pic_datas = SUBSTRING(@pic_datas, LENGTH(@pic_data) + 2);
+    END WHILE;
+END IF;
+
+IF p_post_content IS NOT NULL AND p_post_content != '' THEN
+UPDATE post_mst pm
+LEFT JOIN post_dtl pd ON pd.post_id = pm.post_id
+SET pd.content = p_post_content
+WHERE pm.user_id = p_user_id AND (pd.content != p_post_content OR pe.content IS NULL);
+END IF;
+
+
+COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sign_up` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1384,4 +1513,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-26 17:13:04
+-- Dump completed on 2023-05-26 17:56:18

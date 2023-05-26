@@ -14,8 +14,13 @@ public class LocationCtrl {
 
     @Autowired
     private LocationRepo locationRepo;
-    @GetMapping("/")
+    @GetMapping("/list")
     public ResponseEntity<?> getLocationDatas(@RequestParam(value = "userId", required = false) Integer userId){
         return ResponseEntity.ok().body(locationRepo.getLocDatas(userId));
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> getLocation(@RequestParam("locId") int locId, @RequestParam(value = "userId", required = false) Integer userId){
+        return ResponseEntity.ok().body(locationRepo.getLocation(locId, userId));
     }
 }
