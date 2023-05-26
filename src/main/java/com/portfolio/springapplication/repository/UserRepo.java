@@ -51,4 +51,27 @@ public interface UserRepo {
             "VALUES (#{userId}, #{subUserId})")
     @Options(statementType = StatementType.PREPARED)
     String subUser(int userId, int subUserId);
+
+    @Select("INSERT INTO user_loc_fav (user_id, loc_id) VALUES (#{userId}, #{locId})")
+    @Options(statementType = StatementType.PREPARED)
+    String addFavLoc(int userId, int locId);
+
+    @Select("INSERT INTO user_post_fav (user_id, post_id) VALUES (#{userId}, #{postId})")
+    @Options(statementType = StatementType.PREPARED)
+    String addFavPost(int userId, int postId);
+
+    @Select("DELETE FROM user_sub" +
+            "WHERE user_sub_id = #{userSubId}")
+    @Options(statementType = StatementType.PREPARED)
+    String unSub(int userSubId);
+
+    @Select("DELETE FROM user_post_fav" +
+            "WHERE user_post_fav_id = #{favId}")
+    @Options(statementType = StatementType.PREPARED)
+    String unFavPost(int favId);
+
+    @Select("DELETE FROM user_loc_fav" +
+            "WHERE user_loc_fav_id = #{favId}")
+    @Options(statementType = StatementType.PREPARED)
+    String unFavLoc(int favId);
 }

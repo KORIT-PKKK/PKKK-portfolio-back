@@ -20,4 +20,7 @@ public class PostOutline {
     private String picDatas;
     private String createAt;
     private String updateAt;
+    private Integer userLocFavId;
+    private Integer userPostFavId;
+    private Integer userSubId;
 }

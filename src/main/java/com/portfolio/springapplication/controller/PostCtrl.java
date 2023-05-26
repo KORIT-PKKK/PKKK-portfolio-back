@@ -22,23 +22,23 @@ public class PostCtrl {
     private UserPrincipalDetailService userPrincipalDetailService;
 
     @GetMapping("/list")
-    public ResponseEntity<?> getAllPosts() {
-        return ResponseEntity.ok().body(postRepo.getAllPosts());
+    public ResponseEntity<?> getAllPosts(@RequestParam(value = "userId", required = false)  Integer userId) {
+        return ResponseEntity.ok().body(postRepo.getAllPosts(userId));
     }
 
     @GetMapping("/view")
-    public ResponseEntity<?> getPostDtl(@RequestParam("postId") int postId) {
-        return ResponseEntity.ok().body(postRepo.getPostDetail(postId));
+    public ResponseEntity<?> getPostDtl(@RequestParam("postId") Integer postId, @RequestParam(value = "userId", required = false) Integer userId) {
+        return ResponseEntity.ok().body(postRepo.getPostDetail(postId, userId));
     }
 
     @GetMapping("/location")
-    public ResponseEntity<?> getLocPost(@RequestParam("locId") int locId){
-        return ResponseEntity.ok().body(postRepo.getLocPost(locId));
+    public ResponseEntity<?> getLocPost(@RequestParam("locId") Integer locId, @RequestParam(value = "userId", required = false) Integer userId){
+        return ResponseEntity.ok().body(postRepo.getLocPost(locId, userId));
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> getUserPost(@RequestParam("userId") int userId){
-        return ResponseEntity.ok().body(postRepo.getUserPost(userId));
+    public ResponseEntity<?> getUserPost(@RequestParam("puId") Integer postUserId, @RequestParam(value = "userId", required = false) Integer userId){
+        return ResponseEntity.ok().body(postRepo.getUserPost(postUserId, userId));
     }
 
     @PostMapping("/add")
@@ -56,17 +56,5 @@ public class PostCtrl {
         response.put("postId", postId);
 
         return ResponseEntity.ok().body(response);
-    }
-
-    @PostMapping("/fav/add/loc")
-    public ResponseEntity<?> addFavLoc(@RequestBody FavReqDto favReqDto){
-        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(favReqDto.getUsername());
-        return ResponseEntity.ok().body(postRepo.addFavLoc(userPrincipalDetail.user().getId(), favReqDto.getElementId()));
-    }
-
-    @PostMapping("/fav/add/post")
-    public ResponseEntity<?> addFavPost(@RequestBody FavReqDto favReqDto){
-        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(favReqDto.getUsername());
-        return ResponseEntity.ok().body(postRepo.addFavPost(userPrincipalDetail.user().getId(), favReqDto.getElementId()));
     }
 }

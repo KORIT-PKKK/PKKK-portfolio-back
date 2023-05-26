@@ -4,6 +4,7 @@ import com.portfolio.springapplication.security.auth.UserPrincipalDetailService;
 import com.portfolio.springapplication.security.jwt.JwtAuthEntryPoint;
 import com.portfolio.springapplication.security.jwt.JwtAuthFilter;
 import com.portfolio.springapplication.security.jwt.JwtTokenProvider;
+import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,12 +35,15 @@ public class UserSecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests()
+                .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD)
+                .permitAll()
                 .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/auth/refresh",
                         "/api/post/list", "/api/post/location", "/api/post/view", "/api/post/user",
+                        "/api/loc",
                         "/api/user/info", "/api/user/detail")
                 .permitAll()
                 .anyRequest().authenticated()
-            .and()
+                .and()
                 .addFilterBefore(new JwtAuthFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthEntryPoint);

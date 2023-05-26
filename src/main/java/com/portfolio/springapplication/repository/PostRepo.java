@@ -11,31 +11,23 @@ import java.util.List;
 
 @Mapper
 public interface PostRepo {
-    @Select("CALL get_post_dtl(#{postId})")
+    @Select("CALL get_post_dtl(#{postId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)
-    List<PostDetail> getPostDetail(Integer postId);
+    List<PostDetail> getPostDetail(Integer postId, Integer userId);
 
-    @Select("CALL get_post_overview")
+    @Select("CALL get_post_overview(#{userId})")
     @Options(statementType = StatementType.CALLABLE)
-    List<PostOutline> getAllPosts();
+    List<PostOutline> getAllPosts(Integer userId);
 
     @Select("CALL add_post(#{userId}, #{content}, #{locId}, #{evalScore}, #{picDatas})")
     @Options(statementType = StatementType.CALLABLE)
     int addPost(int userId, String content, int locId, int evalScore, String picDatas);
 
-    @Select("CALL get_location_post_overview(#{locId})")
+    @Select("CALL get_location_post_overview(#{locId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)
-    List<PostOutline> getLocPost(int locId);
+    List<PostOutline> getLocPost(Integer locId, Integer userId);
 
-    @Select("CALL get_user_post_overview(#{userId})")
+    @Select("CALL get_user_post_overview(#{postUserId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)
-    List<PostOutline> getUserPost(int userId);
-
-    @Select("INSERT INTO user_loc_fav (user_id, loc_id) VALUES (#{userId}, #{locId})")
-    @Options(statementType = StatementType.PREPARED)
-    String addFavLoc(int userId, int locId);
-
-    @Select("INSERT INTO user_post_fav (user_id, post_id) VALUES (#{userId}, #{postId})")
-    @Options(statementType = StatementType.PREPARED)
-    String addFavPost(int userId, int postId);
+    List<PostOutline> getUserPost(Integer postUserId, Integer userId);
 }

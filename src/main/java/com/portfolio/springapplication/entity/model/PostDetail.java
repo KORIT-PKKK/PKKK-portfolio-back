@@ -4,10 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class PostDetail {
     private int postId;
@@ -27,4 +23,7 @@ public class PostDetail {
     private String picDatas;
     private String createAt;
     private String updateAt;
+    private Integer userLocFavId;
+    private Integer userPostFavId;
+    private Integer userSubId;
 }
