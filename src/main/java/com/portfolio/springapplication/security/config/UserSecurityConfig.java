@@ -39,7 +39,7 @@ public class UserSecurityConfig {
                 .permitAll()
                 .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/auth/refresh",
                         "/api/post/list", "/api/post/location", "/api/post/view", "/api/post/user",
-                        "/api/loc",
+                        "/api/loc/**",
                         "/api/user/info", "/api/user/detail")
                 .permitAll()
                 .anyRequest().authenticated()
