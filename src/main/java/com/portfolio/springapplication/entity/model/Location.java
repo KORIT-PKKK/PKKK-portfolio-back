@@ -7,7 +7,7 @@ public class Location {
     private int locId;
     private String locName;
     private String address;
-    private int category;
+    private String category;
     private double lat;
     private double lng;
     private Integer userLocFavId;
