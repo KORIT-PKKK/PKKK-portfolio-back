@@ -24,6 +24,11 @@ public class UserCtrl {
     @Autowired
     private UserPrincipalDetailService userPrincipalDetailService;
 
+    @GetMapping("/post")
+    public ResponseEntity<?> getUserPost(@RequestParam("username") String username){
+        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(username);
+        return ResponseEntity.ok().body(userRepo.getUserPost(userPrincipalDetail.user().getId()));
+    }
     @GetMapping("/info")
     public ResponseEntity<?> getUserOutline(@RequestParam("userId") int userId){
         return ResponseEntity.ok().body(userRepo.getUserOutline(userId));
@@ -89,10 +94,22 @@ public class UserCtrl {
         return ResponseEntity.ok().body(userRepo.addFavLoc(userPrincipalDetail.user().getId(), favReqDto.getElementId()));
     }
 
+    @GetMapping("/favorite/loc/list")
+    public ResponseEntity<?> getLocFavList(@RequestParam("username") String username){
+        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(username);
+        return ResponseEntity.ok().body(userRepo.getLocFavList(userPrincipalDetail.user().getId()));
+    }
+
     @PostMapping("/favorite/post/add")
     public ResponseEntity<?> addFavPost(@RequestBody FavReqDto favReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(favReqDto.getUsername());
         return ResponseEntity.ok().body(userRepo.addFavPost(userPrincipalDetail.user().getId(), favReqDto.getElementId()));
+    }
+
+    @GetMapping("/favorite/post/list")
+    public ResponseEntity<?> getPostFavList(@RequestParam("username") String username){
+        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(username);
+        return ResponseEntity.ok().body(userRepo.getPostFavList(userPrincipalDetail.user().getId()));
     }
 
     @DeleteMapping("/favorite/loc/undo")

@@ -1,8 +1,6 @@
 package com.portfolio.springapplication.repository;
 
-import com.portfolio.springapplication.entity.model.SubModel;
-import com.portfolio.springapplication.entity.model.UserInfo;
-import com.portfolio.springapplication.entity.model.UserOutline;
+import com.portfolio.springapplication.entity.model.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
@@ -12,6 +10,10 @@ import java.util.List;
 
 @Mapper
 public interface UserRepo {
+
+    @Select("CALL get_user_post(#{userId})")
+    @Options(statementType = StatementType.CALLABLE)
+    List<UserPost> getUserPost(int userId);
 
     @Select("CALL get_user_outline(#{userId})")
     @Options(statementType = StatementType.CALLABLE)
@@ -56,9 +58,17 @@ public interface UserRepo {
     @Options(statementType = StatementType.PREPARED)
     String addFavLoc(int userId, int locId);
 
+    @Select("CALL user_loc_fav_list(#{userId})")
+    @Options(statementType = StatementType.CALLABLE)
+    List<Location> getLocFavList(int userId);
+
     @Select("INSERT INTO user_post_fav (user_id, post_id) VALUES (#{userId}, #{postId})")
     @Options(statementType = StatementType.PREPARED)
     String addFavPost(int userId, int postId);
+
+    @Select("CALL user_post_fav_list(#{userId})")
+    @Options(statementType = StatementType.CALLABLE)
+    List<PostOutline> getPostFavList(int userId);
 
     @Select("DELETE FROM user_sub " +
             "WHERE user_sub_id = #{userSubId}")
