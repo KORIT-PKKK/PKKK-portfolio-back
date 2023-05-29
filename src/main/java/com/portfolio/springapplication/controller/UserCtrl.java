@@ -79,7 +79,7 @@ public class UserCtrl {
     }
 
     @DeleteMapping("/subscribe/unSub")
-    public ResponseEntity<?> unSub(@RequestParam UndoReqDto undoReqDto){
+    public ResponseEntity<?> unSub(@RequestBody UndoReqDto undoReqDto){
         return ResponseEntity.ok().body(userRepo.unSub(undoReqDto.getElementId()));
     }
 
