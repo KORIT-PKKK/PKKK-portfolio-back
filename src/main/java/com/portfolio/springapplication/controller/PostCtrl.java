@@ -2,6 +2,8 @@ package com.portfolio.springapplication.controller;
 
 import com.portfolio.springapplication.dto.post.FavReqDto;
 import com.portfolio.springapplication.dto.post.PostAddReqDto;
+import com.portfolio.springapplication.dto.post.PostDeleteReqDto;
+import com.portfolio.springapplication.dto.post.PostUpdateReqDto;
 import com.portfolio.springapplication.repository.PostRepo;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetail;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetailService;
@@ -44,7 +46,11 @@ public class PostCtrl {
     @PostMapping("/add")
     public ResponseEntity<?> addPost(@RequestBody PostAddReqDto postAddReqDto) {
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(postAddReqDto.getUsername());
-        String pics = String.join(", ", postAddReqDto.getPicDatas());
+        String pics = null;
+
+        if (!postAddReqDto.getPicDatas().isEmpty()){
+            pics = String.join(", ", postAddReqDto.getPicDatas());
+        }
 
         int postId = postRepo.addPost(
                 userPrincipalDetail.user().getId(),
@@ -56,5 +62,31 @@ public class PostCtrl {
         response.put("postId", postId);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updatePost(@RequestBody PostUpdateReqDto postUpdateReqDto){
+        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(postUpdateReqDto.getUsername());
+        String pics = null;
+
+        if (!postUpdateReqDto.getPicDatas().isEmpty()){
+            pics = String.join(", ", postUpdateReqDto.getPicDatas());
+        }
+
+        return ResponseEntity.ok().body(postRepo.updatePost(
+                userPrincipalDetail.user().getId(),
+                postUpdateReqDto.getEvalScore(),
+                pics,
+                postUpdateReqDto.getContent()
+        ));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deletePost(@RequestBody PostDeleteReqDto postDeleteReqDto){
+        UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(postDeleteReqDto.getUsername());
+
+        return ResponseEntity.ok().body(postRepo.deletePost(
+                postDeleteReqDto.getPostId(), userPrincipalDetail.user().getId()
+        ));
     }
 }

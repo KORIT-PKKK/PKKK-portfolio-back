@@ -33,21 +33,21 @@ public interface UserRepo {
     @Options(statementType = StatementType.PREPARED)
     Integer changePassword(int userId, String username, String password);
 
-    @Select("SELECT ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate" +
-            "FROM user_sub us" +
-            "LEFT JOIN user_dtl ud ON ud.user_id = us.sub_user_id" +
+    @Select("SELECT ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate " +
+            "FROM user_sub us " +
+            "LEFT JOIN user_dtl ud ON ud.user_id = us.sub_user_id " +
             "WHERE us.user_id = #{userId}")
     @Options(statementType = StatementType.PREPARED)
     List<SubModel> getSubTo(int userId);
 
-    @Select("SELECT ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate" +
-            "FROM user_sub us" +
-            "LEFT JOIN user_dtl ud ON ud.user_id = us.user_id" +
+    @Select("SELECT ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate " +
+            "FROM user_sub us " +
+            "LEFT JOIN user_dtl ud ON ud.user_id = us.user_id " +
             "WHERE us.sub_user_id = #{userId}")
     @Options(statementType = StatementType.PREPARED)
     List<SubModel> getSubMe(int userId);
 
-    @Select("INSERT INTO user_sub (user_id, sub_user_id)" +
+    @Select("INSERT INTO user_sub (user_id, sub_user_id) " +
             "VALUES (#{userId}, #{subUserId})")
     @Options(statementType = StatementType.PREPARED)
     String subUser(int userId, int subUserId);
@@ -60,17 +60,17 @@ public interface UserRepo {
     @Options(statementType = StatementType.PREPARED)
     String addFavPost(int userId, int postId);
 
-    @Select("DELETE FROM user_sub" +
+    @Select("DELETE FROM user_sub " +
             "WHERE user_sub_id = #{userSubId}")
     @Options(statementType = StatementType.PREPARED)
     String unSub(int userSubId);
 
-    @Select("DELETE FROM user_post_fav" +
+    @Select("DELETE FROM user_post_fav " +
             "WHERE user_post_fav_id = #{favId}")
     @Options(statementType = StatementType.PREPARED)
     String unFavPost(int favId);
 
-    @Select("DELETE FROM user_loc_fav" +
+    @Select("DELETE FROM user_loc_fav " +
             "WHERE user_loc_fav_id = #{favId}")
     @Options(statementType = StatementType.PREPARED)
     String unFavLoc(int favId);

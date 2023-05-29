@@ -20,8 +20,8 @@ public class JwtAuthFilter extends GenericFilterBean {
 
     private static final List<String> EXCLUDE_URLS = Arrays.asList(
             "/api/auth/signout",
-            "/api/post/add",
-            "/api/user/detail/update", "api/user/password/change","/api/user/subscribe", "/api/user/fav"
+            "/api/post/add", "/api/post/update", "/api/post/delete",
+            "/api/user/detail/update", "api/user/password/change","/api/user/subscribe", "/api/user/favorite"
             );
 
     @Override

@@ -78,29 +78,29 @@ public class UserCtrl {
         return ResponseEntity.ok().body(userRepo.getSubMe(userId));
     }
 
-    @PostMapping("/subscribe/unSub")
-    public ResponseEntity<?> unSub(UndoReqDto undoReqDto){
+    @DeleteMapping("/subscribe/unSub")
+    public ResponseEntity<?> unSub(@RequestParam UndoReqDto undoReqDto){
         return ResponseEntity.ok().body(userRepo.unSub(undoReqDto.getElementId()));
     }
 
-    @PostMapping("/fav/loc/add")
+    @PostMapping("/favorite/loc/add")
     public ResponseEntity<?> addFavLoc(@RequestBody FavReqDto favReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(favReqDto.getUsername());
         return ResponseEntity.ok().body(userRepo.addFavLoc(userPrincipalDetail.user().getId(), favReqDto.getElementId()));
     }
 
-    @PostMapping("/fav/post/add")
+    @PostMapping("/favorite/post/add")
     public ResponseEntity<?> addFavPost(@RequestBody FavReqDto favReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(favReqDto.getUsername());
         return ResponseEntity.ok().body(userRepo.addFavPost(userPrincipalDetail.user().getId(), favReqDto.getElementId()));
     }
 
-    @PostMapping("/fav/loc/undo")
+    @DeleteMapping("/favorite/loc/undo")
     public ResponseEntity<?> undoFavLoc(@RequestBody UndoReqDto undoReqDto){
         return ResponseEntity.ok().body(userRepo.unFavLoc(undoReqDto.getElementId()));
     }
 
-    @PostMapping("/fav/post/undo")
+    @DeleteMapping("/favorite/post/undo")
     public ResponseEntity<?> undoFavPost(@RequestBody UndoReqDto undoReqDto){
         return ResponseEntity.ok().body(userRepo.unFavPost(undoReqDto.getElementId()));
     }
