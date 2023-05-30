@@ -58,7 +58,7 @@ public interface UserRepo {
     @Options(statementType = StatementType.PREPARED)
     String addFavLoc(int userId, int locId);
 
-    @Select("CALL user_loc_fav_list(#{userId})")
+    @Select("CALL get_loc_fav_list(#{userId})")
     @Options(statementType = StatementType.CALLABLE)
     List<Location> getLocFavList(int userId);
 
@@ -66,7 +66,7 @@ public interface UserRepo {
     @Options(statementType = StatementType.PREPARED)
     String addFavPost(int userId, int postId);
 
-    @Select("CALL user_post_fav_list(#{userId})")
+    @Select("CALL get_post_fav_list(#{userId})")
     @Options(statementType = StatementType.CALLABLE)
     List<PostOutline> getPostFavList(int userId);
 

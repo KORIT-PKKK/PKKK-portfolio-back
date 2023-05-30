@@ -9,6 +9,6 @@ public class PostAddReqDto {
     private String username;
     private String content;
     private int locId;
-    private int evalScore;
+    private Double evalScore;
     private List<String> picDatas;
 }

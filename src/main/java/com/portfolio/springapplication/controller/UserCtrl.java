@@ -43,6 +43,8 @@ public class UserCtrl {
     public ResponseEntity<?> updateUserInfo(@RequestBody UpdateReqDto updateReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(updateReqDto.getUsername());
 
+        System.out.println(updateReqDto);
+
         return ResponseEntity.ok().body(userRepo.updateUserInfo(userPrincipalDetail.user().getId(), updateReqDto.getName(), updateReqDto.getIntroduce(), updateReqDto.getImageUrl()));
     }
 
