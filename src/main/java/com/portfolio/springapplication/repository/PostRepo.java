@@ -25,7 +25,7 @@ public interface PostRepo {
 
     @Select("CALL post_update(#{userId}, #{evalScore}, #{picDatas}, #{content})")
     @Options(statementType = StatementType.CALLABLE)
-    int updatePost(int userId, Double evalScore, String picDatas, String content);
+    String updatePost(int userId, Double evalScore, String picDatas, String content);
 
     @Select("CALL get_location_post_overview(#{locId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)
@@ -37,5 +37,5 @@ public interface PostRepo {
 
     @Select("CALL delete_post(#{postId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)
-    int deletePost(int postId, int userId);
+    String deletePost(int postId, int userId);
 }
