@@ -35,14 +35,14 @@ public interface UserRepo {
     @Options(statementType = StatementType.PREPARED)
     Integer changePassword(int userId, String username, String password);
 
-    @Select("SELECT ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate " +
+    @Select("SELECT us.user_sub_id AS userSubId, ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate " +
             "FROM user_sub us " +
             "LEFT JOIN user_dtl ud ON ud.user_id = us.sub_user_id " +
             "WHERE us.user_id = #{userId}")
     @Options(statementType = StatementType.PREPARED)
     List<SubModel> getSubTo(int userId);
 
-    @Select("SELECT ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate " +
+    @Select("SELECT us.user_sub_id AS userSubId, ud.user_id AS userId, ud.name, ud.image_url AS imageUrl, us.create_at AS subDate " +
             "FROM user_sub us " +
             "LEFT JOIN user_dtl ud ON ud.user_id = us.user_id " +
             "WHERE us.sub_user_id = #{userId}")
