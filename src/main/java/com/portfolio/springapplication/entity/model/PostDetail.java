@@ -9,6 +9,7 @@ public class PostDetail {
     private int postId;
     private int userId;
     private int locId;
+    private int postEvalId;
     private String name;
     private String imageUrl;
     private String locName;

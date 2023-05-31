@@ -23,9 +23,9 @@ public interface PostRepo {
     @Options(statementType = StatementType.CALLABLE)
     int addPost(int userId, String content, int locId, double evalScore, String picDatas);
 
-    @Select("CALL post_update(#{userId}, #{evalScore}, #{picDatas}, #{content})")
+    @Select("CALL post_update(#{postId}, #{locId}, #{postEvalId}, #{userId}, #{evalScore}, #{picDatas}, #{delPics}, #{content})")
     @Options(statementType = StatementType.CALLABLE)
-    String updatePost(int userId, Double evalScore, String picDatas, String content);
+    String updatePost(int postId, int locId, int postEvalId, int userId, Double evalScore, String picDatas, String delPics, String content);
 
     @Select("CALL get_location_post_overview(#{locId}, #{userId})")
     @Options(statementType = StatementType.CALLABLE)

@@ -28,8 +28,6 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         String responseJson = objectMapper.writeValueAsString(errorResponseDto);
 
         PrintWriter out = response.getWriter();
-        System.out.println(request);
         out.println(request.getRequestURI());
-        out.println(responseJson);
     }
 }

@@ -52,6 +52,7 @@ public class AuthService {
 
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(username);
 
+
         if (userPrincipalDetail == null) {
             throw new CustomException("Invalid user.", ErrorMap.builder()
                     .put("user", "User not exist.").build());

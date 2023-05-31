@@ -67,16 +67,28 @@ public class PostCtrl {
     @PutMapping("/update")
     public ResponseEntity<?> updatePost(@RequestBody PostUpdateReqDto postUpdateReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(postUpdateReqDto.getUsername());
+
         String pics = null;
+        String delPics = null;
+
+        System.out.println(postUpdateReqDto);
 
         if (!postUpdateReqDto.getPicDatas().isEmpty()){
             pics = String.join(", ", postUpdateReqDto.getPicDatas());
         }
 
+        if (!postUpdateReqDto.getDelPicDatas().isEmpty()){
+            delPics = String.join(", ", postUpdateReqDto.getDelPicDatas());
+        }
+
         return ResponseEntity.ok().body(postRepo.updatePost(
+                postUpdateReqDto.getPostId(),
+                postUpdateReqDto.getLocId(),
+                postUpdateReqDto.getPostEvalId(),
                 userPrincipalDetail.user().getId(),
                 postUpdateReqDto.getEvalScore(),
                 pics,
+                delPics,
                 postUpdateReqDto.getContent()
         ));
     }
