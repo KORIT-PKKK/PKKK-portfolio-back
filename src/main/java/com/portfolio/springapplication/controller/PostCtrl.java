@@ -9,10 +9,13 @@ import com.portfolio.springapplication.security.auth.UserPrincipalDetail;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/post")
@@ -71,14 +74,14 @@ public class PostCtrl {
         String pics = null;
         String delPics = null;
 
-        System.out.println(postUpdateReqDto);
-
         if (!postUpdateReqDto.getPicDatas().isEmpty()){
-            pics = String.join(", ", postUpdateReqDto.getPicDatas());
+            pics = blankRemover(postUpdateReqDto.getPicDatas());
+            System.out.println("upload : " + pics);
         }
 
         if (!postUpdateReqDto.getDelPicDatas().isEmpty()){
-            delPics = String.join(", ", postUpdateReqDto.getDelPicDatas());
+            delPics = blankRemover(postUpdateReqDto.getDelPicDatas());
+            System.out.println("delete : " + delPics);
         }
 
         return ResponseEntity.ok().body(postRepo.updatePost(
@@ -100,5 +103,15 @@ public class PostCtrl {
         return ResponseEntity.ok().body(postRepo.deletePost(
                 postDeleteReqDto.getPostId(), userPrincipalDetail.user().getId()
         ));
+    }
+
+    private String blankRemover(List<String> list){
+        String removedString = StringUtils.collectionToDelimitedString(
+                list.stream()
+                        .map(String::trim) // 각 항목의 공백 제거
+                        .collect(Collectors.toList()),
+                ","
+        );
+        return removedString;
     }
 }
