@@ -19,9 +19,9 @@ public interface UserRepo {
     @Options(statementType = StatementType.CALLABLE)
     List<UserOutline> getUserOutline(int userId);
 
-    @Select("SELECT name, introduce, image_url FROM user_dtl WHERE user_id = #{userId}")
+    @Select("SELECT name, introduce, image_url AS imageUrl FROM user_dtl WHERE user_id = #{userId}")
     @Options(statementType = StatementType.PREPARED)
-    List<UserInfo> getUserInfo(int userId);
+    UserInfo getUserInfo(int userId);
 
     @Select("CALL sign_up(#{username}, #{password}, #{name})")
     @Options(statementType = StatementType.CALLABLE)

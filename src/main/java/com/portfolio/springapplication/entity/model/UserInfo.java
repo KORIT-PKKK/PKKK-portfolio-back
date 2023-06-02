@@ -7,5 +7,4 @@ public class UserInfo {
     private String name;
     private String introduce;
     private String imageUrl;
-
 }

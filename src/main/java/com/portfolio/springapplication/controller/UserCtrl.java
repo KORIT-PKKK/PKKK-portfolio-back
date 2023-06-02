@@ -5,6 +5,7 @@ import com.portfolio.springapplication.dto.user.PwChangeReqDto;
 import com.portfolio.springapplication.dto.user.SubReqDto;
 import com.portfolio.springapplication.dto.user.UndoReqDto;
 import com.portfolio.springapplication.dto.user.UpdateReqDto;
+import com.portfolio.springapplication.entity.model.UserInfo;
 import com.portfolio.springapplication.repository.UserRepo;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetail;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetailService;
@@ -36,7 +37,9 @@ public class UserCtrl {
 
     @GetMapping("/detail")
     public ResponseEntity<?> getUserInfo(@RequestParam("userId") int userId){
-        return ResponseEntity.ok().body(userRepo.getUserInfo(userId));
+        UserInfo userInfo = userRepo.getUserInfo(userId);
+        System.out.println(userInfo);
+        return ResponseEntity.ok().body(userInfo);
     }
 
     @PutMapping("/detail/update")
