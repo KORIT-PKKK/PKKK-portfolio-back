@@ -29,7 +29,7 @@ public class UserCtrl {
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(username);
         return ResponseEntity.ok().body(userRepo.getUserPost(userPrincipalDetail.user().getId()));
     }
-    @GetMapping("/info")
+        @GetMapping("/info")
     public ResponseEntity<?> getUserOutline(@RequestParam("userId") int userId){
         return ResponseEntity.ok().body(userRepo.getUserOutline(userId));
     }
@@ -39,7 +39,7 @@ public class UserCtrl {
         return ResponseEntity.ok().body(userRepo.getUserInfo(userId));
     }
 
-    @PostMapping("/detail/update")
+    @PutMapping("/detail/update")
     public ResponseEntity<?> updateUserInfo(@RequestBody UpdateReqDto updateReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(updateReqDto.getUsername());
 
@@ -48,7 +48,7 @@ public class UserCtrl {
         return ResponseEntity.ok().body(userRepo.updateUserInfo(userPrincipalDetail.user().getId(), updateReqDto.getName(), updateReqDto.getIntroduce(), updateReqDto.getImageUrl()));
     }
 
-    @PostMapping("/password/change")
+    @PutMapping("/password/change")
     public ResponseEntity<?> changePassword(@RequestBody PwChangeReqDto pwChangeReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail)  userPrincipalDetailService.loadUserByUsername(pwChangeReqDto.getUsername());
 
