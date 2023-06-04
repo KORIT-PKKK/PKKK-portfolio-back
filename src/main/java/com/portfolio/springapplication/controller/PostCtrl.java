@@ -4,6 +4,7 @@ import com.portfolio.springapplication.dto.post.FavReqDto;
 import com.portfolio.springapplication.dto.post.PostAddReqDto;
 import com.portfolio.springapplication.dto.post.PostDeleteReqDto;
 import com.portfolio.springapplication.dto.post.PostUpdateReqDto;
+import com.portfolio.springapplication.entity.model.PostDetail;
 import com.portfolio.springapplication.repository.PostRepo;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetail;
 import com.portfolio.springapplication.security.auth.UserPrincipalDetailService;
@@ -33,7 +34,10 @@ public class PostCtrl {
 
     @GetMapping("/view")
     public ResponseEntity<?> getPostDtl(@RequestParam("postId") Integer postId, @RequestParam(value = "userId", required = false) Integer userId) {
-        return ResponseEntity.ok().body(postRepo.getPostDetail(postId, userId));
+        List<PostDetail> result = postRepo.getPostDetail(postId, userId);
+
+        System.out.println(result);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/location")
@@ -70,6 +74,8 @@ public class PostCtrl {
     @PutMapping("/update")
     public ResponseEntity<?> updatePost(@RequestBody PostUpdateReqDto postUpdateReqDto){
         UserPrincipalDetail userPrincipalDetail = (UserPrincipalDetail) userPrincipalDetailService.loadUserByUsername(postUpdateReqDto.getUsername());
+
+        System.out.println(postUpdateReqDto);
 
         String pics = null;
         String delPics = null;
