@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/database
-    username: root
-    password: root
+    url: jdbc:mysql://portfoliodb.c29jzg47agm4.ap-northeast-2.rds.amazonaws.com:3306/portfoliodb
+    username: admin
+    password: 1q2w3e4r
   security:
     oauth2:
       client:
